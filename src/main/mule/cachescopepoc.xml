@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8dd20b14-8c60-479f-ae9f-ebcbbadd859a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="cachescopepocFlow" doc:id="a28f3aab-e841-4a00-8f69-4575e08eadf9" >
+		<http:listener doc:name="Listener" doc:id="8b98c228-e1fe-4d29-aa5e-d20b19311f78" config-ref="HTTP_Listener_config" path="test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="420bcb0b-76dd-46ce-a69d-7603fbe74abc" message="Flow start"/>
+		<ee:cache doc:name="Cache" doc:id="f28666b6-0547-4371-ab77-9b9a6758e65f" >
+			<logger level="INFO" doc:name="Logger" doc:id="9eac1060-c0c3-42cd-813b-398593665bf5" message="cache start"/>
+			<http:request method="GET" doc:name="Request" doc:id="fa9d9327-10f4-4043-9670-9f3c89c54bc1" url="https://reqres.in/api/users/2"/>
+			<ee:transform doc:name="Transform Message" doc:id="b7af537b-6685-4d07-83a0-d62ba354325a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="5b1b39a3-c2b5-4f49-aa75-86124b3cf2e6" message="cahe end"/>
+		</ee:cache>
+		<logger level="INFO" doc:name="Logger" doc:id="ebe83aca-83f5-4529-be60-57d77b54f8c3" message="Flow end"/>
+	</flow>
+</mule>
